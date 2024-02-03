@@ -1,12 +1,12 @@
 openapi: 3.0.3
 info:
-  title: Real Time Cyberbullying Detection Prototype
-  description: Real Time Cyberbullying Detection Prototype
+  title: Real Time Cyberbullying Detection Prototype API
+  description: Real Time Cyberbullying Detection Prototype API
   version: 0.0.1
 servers:
   - url: 'https://'
 paths:
-  '/v1/twitter/cyberbully/screening':
+  '/v1/cyberbully/screening/twitter':
     post:
       description: Cyberbullying Screening API for Specific Tweet
       operationId: TwitterCyberbullyScreening
@@ -23,17 +23,41 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CyberBullyScreeningResult'
+                $ref: '#/components/schemas/CyberBullyScreeningResponse'
         default:
           description: unexpected error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  '/v1/self/cyberbully/statistics':
+    get:
+      responses:
+        '200':
+          description: CyberBully Statistics for Current User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CyberBullyStatisticResponse'
+  '/v1/self/issue-session':
+    'post':
+      requestBody:
+        description: Application session creation request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tweet'
+      responses:
+        200:
+          description: Application session creation response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionTokenResponse'
 components:
   schemas:
-    CyberBullyScreeningResult:
+    CyberBullyScreeningResponse:
       type: object
       properties:
         result:
@@ -42,7 +66,45 @@ components:
             - PASS
             - BLOCK
             - TIMEOUT
-
+    CyberBullyStatistic:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - GREEN
+            - YELLOW
+            - RED
+        threshold:
+          type: number
+          default: 0
+        count:
+          type: number
+          default: 0
+    CyberBullyStatisticResponse:
+      type: object
+      properties:
+        twitter:
+          $ref: '#/components/schemas/CyberBullyStatistic'
+    SessionTokenRequest:
+      type: object
+      properties:
+        notification_channel:
+          $ref: '#/components/schemas/NotificationChannel'
+        notification_target:
+          type: string
+    SessionTokenResponse:
+      type: object
+      properties:
+        session_id:
+          $ref: '#/components/schemas/SessionId'
+    SessionId:
+      type: string
+      example: 'c5f04293-2450-44f4-bb1d-e35de9aa0244'
+    NotificationChannel:
+      type: string
+      enum:
+        - EMAIL
     Tweet:
       type: object
       required:
@@ -51,7 +113,6 @@ components:
         text:
           type: string
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-
     Error:
       type: object
       required:
