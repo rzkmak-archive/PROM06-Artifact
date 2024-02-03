@@ -1,0 +1,65 @@
+openapi: 3.0.3
+info:
+  title: Real Time Cyberbullying Detection Prototype
+  description: Real Time Cyberbullying Detection Prototype
+  version: 0.0.1
+servers:
+  - url: 'https://'
+paths:
+  '/v1/twitter/cyberbully/screening':
+    post:
+      description: Cyberbullying Screening API for Specific Tweet
+      operationId: TwitterCyberbullyScreening
+      requestBody:
+        description: Tweet content to validate
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tweet'
+      responses:
+        '200':
+          description: CyberBully Screening Result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CyberBullyScreeningResult'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    CyberBullyScreeningResult:
+      type: object
+      properties:
+        result:
+          type: string
+          enum:
+            - PASS
+            - BLOCK
+            - TIMEOUT
+
+    Tweet:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

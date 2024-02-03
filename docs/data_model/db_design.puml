@@ -1,0 +1,40 @@
+@startuml
+
+entity user {
+    *id: Long <<generated>>
+    *email: String
+    *created_at: Timestamp
+    *updated_at: Timestamp
+}
+
+entity user_alert_threshold {
+    *id: Long <<generated>>
+    *user_id: Long <<PK>>
+    *threshold_percentage: Long
+    *threshold_current: Long
+    *is_enable: Boolean
+    *created_at: Timestamp
+    *updated_at: Timestamp
+}
+
+entity channel_notify {
+    *id: Long <<generated>>
+    *user_id: Long <<PK>>
+    *type: Enum (EMAIL)
+    *delivery_target: String
+}
+
+entity user_alert_report {
+    *id: Long <<generated>>
+    *user_id: Long <<PK>>
+    *threshold: Long
+    *created_at: Timestamp
+    *updated_at: Timestamp
+}
+
+user |o..o{ channel_notify
+user |o..o| user_alert_threshold
+user |o..o{ user_alert_report
+
+
+@enduml

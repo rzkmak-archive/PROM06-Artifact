@@ -1,0 +1,50 @@
+@startuml
+
+autonumber
+
+actor User
+participant Browser
+participant BrowserExtension as BEXT
+participant WebserviceAPI as API
+participant DB
+participant Alert
+database Database as DB
+
+User -> Browser: Open twitter homepage
+BEXT -> Browser: Consume DOM Tweet Content
+Browser --> BEXT
+
+loop foreach tweet content
+    BEXT -> API: /v1/twitter/cyberbully/screening
+    API -> API: Predict Cyberbully Screening
+
+    alt cyberbully detected
+        API --> BEXT: BLOCK
+        opt ASYNC alert evaluation
+
+        API -> DB: Increment Current Threshold
+
+        API -> DB: Fetch Threshold Configuration
+        DB --> API: Threshold Configuration
+
+        opt if current threshold > min threshold
+            API -> DB: Fetch Alert Target Configuration
+            DB --> API: Alert Target Configuration
+            API -> Alert: Send Warning Message
+        end
+
+        end alt
+    else cyberbully not detected
+        API --> BEXT: PASS
+        BEXT --> Browser: Display Tweet
+    else screening timeout or other error
+        API --> BEXT: TIMEOUT
+        BEXT --> Browser: Display Tweet
+        note right Browser
+            Don't block in any error case
+            to avoid interrupt user experience
+        end note
+    end
+
+end loop
+@enduml
