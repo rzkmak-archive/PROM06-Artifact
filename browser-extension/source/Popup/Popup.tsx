@@ -1,4 +1,5 @@
 import * as React from 'react';
+// import axios from 'axios';
 import {useEffect, useState} from "react";
 
 import './styles.scss';
@@ -17,6 +18,10 @@ const Popup: React.FC = () => {
                 }
             }
         );
+
+        setInterval(() => {
+            // console.log("polling started")
+        }, 1000)
     }, []);
 
     const storeIdentifierKey = (identifierKey: string) => {
@@ -38,10 +43,6 @@ const Popup: React.FC = () => {
             return undefined;
         }
     }
-    // const clearIdentifierKey = () => {
-    //     browser.storage.local.remove("CYBER_BULLY_EXTENSION_USER_ID_KEY")
-    //         .then(() => (console.log("session cleared")))
-    // }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -51,6 +52,12 @@ const Popup: React.FC = () => {
         e.preventDefault();
         storeIdentifierKey(email);
         setKeyExists(true);
+
+        // try {
+        //     axios.get('https://your-api-endpoint').then(r => r.data);
+        // } catch (error) {
+        //     console.error('Error fetching data:', error);
+        // }
     };
 
     return (

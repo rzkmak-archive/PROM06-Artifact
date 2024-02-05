@@ -17,7 +17,8 @@
     "activeTab",
     "storage",
     "http://*/*",
-    "https://*/*"
+    "https://*/*",
+    "scripting"
   ],
 
   "content_security_policy": "script-src 'self'; object-src 'self'",
@@ -46,7 +47,8 @@
     },
     "default_title": "tiny title",
     "__chrome|opera__chrome_style": false,
-    "__firefox__browser_style": false
+    "__firefox__browser_style": false,
+    "active": false
   },
 
   "__chrome|opera__options_page": "options.html",
@@ -65,8 +67,7 @@
 
   "content_scripts": [{
     "matches": [
-      "http://*/*",
-      "https://*/*"
+      "https://twitter.com/*"
     ],
     "js": [
       "js/contentScript.bundle.js"
