@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  db:
+    container_name: "cb-mysql"
+    image: mysql:5.7
+    platform: linux/x86_64
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'cb_database'
+      MYSQL_ROOT_PASSWORD: 'toor'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - './mysql-db-data:/var/lib/mysql'
+    user: 1000:1000
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=toor
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  flyway:
+    container_name: "cb-flyway"
+    image: flyway/flyway:7.15.0
+    platform: linux/x86_64
+    command: -url=jdbc:mysql://db -schemas=cb_database -user=root -password=toor -connectRetries=60 migrate
+    volumes:
+      - .:/flyway/sql
+    depends_on:
+      db:
+        condition: service_healthy
