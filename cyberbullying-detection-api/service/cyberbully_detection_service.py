@@ -28,4 +28,4 @@ class CyberBullyDetectionService:
         max_prob = max(label_prob_dict.values())
         highest_prob_label = [label for label, prob in label_prob_dict.items() if prob == max_prob][0]
 
-        print(highest_prob_label)
+        return highest_prob_label

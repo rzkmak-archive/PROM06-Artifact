@@ -28,4 +28,4 @@ def validate_basic_auth(credentials: HTTPBasicCredentials = Depends(security)):
 
 @app.post("/v1/screening/twitter", dependencies=[Depends(validate_basic_auth)])
 def screening_twitter(request: ScreeningTwitterRequest):
-    service.classify(request)
+    return {"result": service.classify(request)}
