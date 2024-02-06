@@ -44,7 +44,7 @@ class ScreeningService(
                     screeningHistoryRepository.save(screeningHistory)
                 }
 
-                if (response.result == ScreeningResultType.GREEN) {
+                if (response.result.type == ScreeningResultType.GREEN) {
                     return
                 }
 

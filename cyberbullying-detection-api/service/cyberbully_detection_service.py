@@ -1,15 +1,9 @@
-import tensorflow as tf
-import numpy as np
 import torch
 from scipy.special import softmax
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 BERT_MODEL = "socialmediaie/TRAC2020_ALL_C_bert-base-multilingual-uncased"
-TASK_LABEL_IDS = {
-    "Sub-task A": ["OAG", "NAG", "CAG"],
-    "Sub-task B": ["GEN", "NGEN"],
-    "Sub-task C": ["OAG-GEN", "OAG-NGEN", "NAG-GEN", "NAG-NGEN", "CAG-GEN", "CAG-NGEN"]
-}
+TASK_LABELS = ["OAG-GEN", "OAG-NGEN", "NAG-GEN", "NAG-NGEN", "CAG-GEN", "CAG-NGEN"]
 
 
 class CyberBullyDetectionService:
@@ -29,8 +23,9 @@ class CyberBullyDetectionService:
 
         preds = logits.detach().cpu().numpy()
         preds_probs = softmax(preds, axis=1)
-        preds = np.argmax(preds_probs, axis=1)
 
-        task_labels = TASK_LABEL_IDS["Sub-task C"]
-        preds_labels = np.array(task_labels)[preds]
-        print(dict(zip(task_labels, preds_probs[0])), preds_labels)
+        label_prob_dict = dict(zip(TASK_LABELS, preds_probs[0]))
+        max_prob = max(label_prob_dict.values())
+        highest_prob_label = [label for label, prob in label_prob_dict.items() if prob == max_prob][0]
+
+        print(highest_prob_label)

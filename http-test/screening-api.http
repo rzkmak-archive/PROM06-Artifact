@@ -1,0 +1,5 @@
+POST http://127.0.0.1:8000/v1/screening/twitter
+Content-Type: application/json
+Authorization: Basic ZGVmYXVsdF9hcHBfa2V5OmRlZmF1bHRfYXBwX3NlY3JldA==
+
+{"value":  "this is twitter text that need to be sent"}
