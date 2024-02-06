@@ -6,7 +6,7 @@ info:
 servers:
   - url: 'https://'
 paths:
-  '/v1/cyberbully/screening/twitter':
+  '/v1/self/cyberbully/screening/twitter':
     post:
       description: Cyberbullying Screening API for Specific Tweet
       operationId: TwitterCyberbullyScreening
