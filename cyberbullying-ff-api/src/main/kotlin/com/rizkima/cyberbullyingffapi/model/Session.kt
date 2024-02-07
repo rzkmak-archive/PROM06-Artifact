@@ -7,7 +7,7 @@ import java.util.Date
 @Entity
 class Session(
         @Id
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long? = null,
 
         @Column(nullable = false)

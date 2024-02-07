@@ -25,7 +25,10 @@ services:
     platform: linux/x86_64
     command: -url=jdbc:mysql://db -schemas=cb_database -user=root -password=toor -connectRetries=60 migrate
     volumes:
-      - .:/flyway/sql
+      - ./migration:/flyway/sql
     depends_on:
-      db:
-        condition: service_healthy
+      - db
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"

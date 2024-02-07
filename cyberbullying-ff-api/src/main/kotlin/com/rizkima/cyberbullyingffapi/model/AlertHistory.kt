@@ -5,7 +5,7 @@ import java.util.*
 
 @Entity
 class AlertHistory(
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Id
         var id: Long? = null,
 

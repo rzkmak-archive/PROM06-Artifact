@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping
 
 @FeignClient(
         name = "cyber-bully-api-feign",
-        url = "\${cyber-bully-api-feign.host}"
+        url = "\${cyberBullyApiFeign.url:localhost:8000}"
 )
 interface CyberBullyTwitterAPIFeign {
     @PostMapping("/v1/screening/twitter")

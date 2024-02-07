@@ -2,8 +2,10 @@ package com.rizkima.cyberbullyingffapi.service
 
 import com.rizkima.cyberbullyingffapi.controller.request.ScreeningTwitterRequest
 import com.rizkima.cyberbullyingffapi.enum.ScreeningResultType
+import com.rizkima.cyberbullyingffapi.enum.ScreeningType
 import com.rizkima.cyberbullyingffapi.feign.CyberBullyTwitterAPIFeign
 import com.rizkima.cyberbullyingffapi.model.AlertHistory
+import com.rizkima.cyberbullyingffapi.model.ScreeningHistory
 import com.rizkima.cyberbullyingffapi.model.Session
 import com.rizkima.cyberbullyingffapi.repository.AlertHistoryRepository
 import com.rizkima.cyberbullyingffapi.repository.ScreeningHistoryRepository
@@ -39,9 +41,20 @@ class ScreeningService(
             ).let {
                 val response = it.body!!
 
+                log.info("response from screening: {} raw: {}", screeningTwitterRequest.tweetValue, response.result)
+
                 screeningHistoryRepository.findBySessionId(sessionId = session.sessionId).let { screeningHistory ->
-                    screeningHistory!!.screeningCount++
-                    screeningHistoryRepository.save(screeningHistory)
+
+                    if (screeningHistory == null) {
+                        screeningHistoryRepository.save(ScreeningHistory(
+                                sessionId = session.sessionId,
+                                screeningCount = 1L,
+                                screeningType = ScreeningType.TWITTER
+                        ))
+                    } else {
+                        screeningHistory.screeningCount++
+                        screeningHistoryRepository.save(screeningHistory)
+                    }
                 }
 
                 if (response.result.type == ScreeningResultType.GREEN) {
@@ -63,6 +76,7 @@ class ScreeningService(
                             )
                     )
                     log.info("alert threshold breached for sessionId: {}", session.sessionId)
+                    redisTemplate?.delete(session.sessionId)
 
                     notificationService.sendNotificationEmailForBreachedThreshold(session)
                 }

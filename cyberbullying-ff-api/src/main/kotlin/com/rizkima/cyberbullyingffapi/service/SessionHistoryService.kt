@@ -8,6 +8,8 @@ class SessionHistoryService(
         val screeningHistoryRepository: ScreeningHistoryRepository
 ) {
     fun getScreeningCount(sessionId: String): Long {
-        return screeningHistoryRepository.countAllBySessionId(sessionId)
+        val screeningHistory = screeningHistoryRepository.findBySessionId(sessionId) ?: return 0L
+
+        return screeningHistory.screeningCount
     }
 }

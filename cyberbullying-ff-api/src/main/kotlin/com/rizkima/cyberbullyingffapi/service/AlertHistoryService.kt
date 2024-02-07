@@ -15,10 +15,11 @@ class AlertHistoryService(
 
     fun getLastTriggeredDate(sessionId: String): Instant? {
         alertHistoryRepository
-            .findFirstBySessionIdOrderByCreatedAtDesc(sessionId)
-            .createdAt.let {
-                if (it == null) return null
-                else return it.toInstant()
-            }
+            .findFirstBySessionIdOrderByCreatedAtDesc(sessionId).let {
+                    it?.createdAt.let {
+                        if (it == null) return null
+                        else return it.toInstant()
+                    }
+                }
     }
 }

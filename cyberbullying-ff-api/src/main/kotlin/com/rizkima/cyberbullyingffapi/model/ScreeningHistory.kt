@@ -6,9 +6,9 @@ import java.util.*
 
 @Entity
 class ScreeningHistory(
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Id
-        var id: Long,
+        var id: Long? = null,
 
         @Column(nullable = false)
         var sessionId: String,
@@ -21,8 +21,8 @@ class ScreeningHistory(
         var screeningCount: Long,
 
         @Column
-        var createdAt: Date,
+        var createdAt: Date? = null,
 
         @Column
-        var updatedAt: Date
+        var updatedAt: Date? = null
 )

@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository
 interface AlertHistoryRepository : JpaRepository<AlertHistory, Long> {
     fun countAllBySessionId(sessionId: String): Long
 
-    fun findFirstBySessionIdOrderByCreatedAtDesc(sessionId: String): AlertHistory
+    fun findFirstBySessionIdOrderByCreatedAtDesc(sessionId: String): AlertHistory?
 }
