@@ -20,10 +20,7 @@ browser.runtime.onInstalled.addListener((): void => {
             .local
             .get([hashLookUp])
             .then(hashValue => {
-                console.log("hash value2", hashValue)
-                // if (hashValue[hashLookUp] == null) {
-                if (true) {
-                    console.log("send tweet")
+                if (hashValue[hashLookUp] == null) {
                     axios.post(
                         'http://localhost:8080/v1/self/cyberbully/screening/twitter',
                         {
