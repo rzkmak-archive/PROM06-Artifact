@@ -12,7 +12,8 @@ X-Session-Id: 0f971bba-6fb2-494d-a2e2-5623e16d42fb
 ###
 POST http://127.0.0.1:8080/v1/self/cyberbully/screening/twitter
 Content-Type: application/json
-X-Session-Id: 0f971bba-6fb2-494d-a2e2-5623e16d42fb
+X-Session-Id: 5d67d076-e200-499a-8ab6-1b6b5bfe02cf
+
 
 {
   "tweetValue": "You fuckin idiot"

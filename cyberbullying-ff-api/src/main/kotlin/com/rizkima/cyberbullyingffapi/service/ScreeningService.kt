@@ -9,6 +9,7 @@ import com.rizkima.cyberbullyingffapi.model.ScreeningHistory
 import com.rizkima.cyberbullyingffapi.model.Session
 import com.rizkima.cyberbullyingffapi.repository.AlertHistoryRepository
 import com.rizkima.cyberbullyingffapi.repository.ScreeningHistoryRepository
+import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.scheduling.annotation.Async
@@ -26,6 +27,7 @@ class ScreeningService(
 ) {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
+    @Transactional
     fun screeningTwitter(screeningTwitterRequest: ScreeningTwitterRequest, session: Session) {
         doScreeningTwitterAsync(screeningTwitterRequest, session)
     }
@@ -43,19 +45,7 @@ class ScreeningService(
 
                 log.info("response from screening: {} raw: {}", screeningTwitterRequest.tweetValue, response.result)
 
-                screeningHistoryRepository.findBySessionId(sessionId = session.sessionId).let { screeningHistory ->
 
-                    if (screeningHistory == null) {
-                        screeningHistoryRepository.save(ScreeningHistory(
-                                sessionId = session.sessionId,
-                                screeningCount = 1L,
-                                screeningType = ScreeningType.TWITTER
-                        ))
-                    } else {
-                        screeningHistory.screeningCount++
-                        screeningHistoryRepository.save(screeningHistory)
-                    }
-                }
 
                 if (response.result.type == ScreeningResultType.GREEN) {
                     return
@@ -84,6 +74,22 @@ class ScreeningService(
         } catch (e: Exception) {
             log.error("Unexpected error happen", e)
             throw e
+        }
+    }
+
+    fun insertScreeningHistory(sessionId: String) {
+        screeningHistoryRepository.findBySessionId(sessionId = sessionId).let { screeningHistory ->
+
+            if (screeningHistory == null) {
+                screeningHistoryRepository.save(ScreeningHistory(
+                        sessionId = sessionId,
+                        screeningCount = 1L,
+                        screeningType = ScreeningType.TWITTER
+                ))
+            } else {
+                screeningHistory.screeningCount++
+                screeningHistoryRepository.save(screeningHistory)
+            }
         }
     }
 }

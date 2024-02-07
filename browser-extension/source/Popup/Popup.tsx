@@ -1,5 +1,5 @@
 import * as React from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import {useEffect, useState} from "react";
 
 import './styles.scss';
@@ -8,33 +8,65 @@ import {browser} from "webextension-polyfill-ts";
 const Popup: React.FC = () => {
     const [email, setEmail] = useState('');
     const [keyExists, setKeyExists] = useState(false);
+    const [analyzedTweetCount, setAnalyzedTweetCount] = useState(0)
+    const [cyberBullyTweetCount, setCyberBullyTweetCount] = useState(0)
+    const [lastAlertTriggered, setLastAlertTriggered] = useState('')
+
+    const startPolling = (sessionIdKey: string) => {
+        setInterval(async () => {
+
+            let result = await axios.get(
+                'http://localhost:8080/v1/self/cyberbully/statistics',
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Session-Id': sessionIdKey
+                    }
+                }
+            )
+
+            if (result.status != 200) {
+                console.error("error happen", result.data)
+            } else {
+                console.log(result.data, result.request.data)
+                setAnalyzedTweetCount(result.data["analyzedCyberBullyCount"])
+                setCyberBullyTweetCount(result.data["cyberBullyDetectedCount"])
+                setLastAlertTriggered(result.data["lastAlert"])
+            }
+        }, 1000)
+    }
 
     useEffect(() => {
-        // Get the key from local storage
         getIdentifierKey().then(
             r => {
-                if (r) {
+                if (r != null) {
                     setKeyExists(true);
+                    startPolling(r);
                 }
             }
         );
-
-        setInterval(() => {
-            // console.log("polling started")
-        }, 1000)
     }, []);
 
     const storeIdentifierKey = (identifierKey: string) => {
         browser
             .storage
-            .local
+            .sync
             .set({"CYBER_BULLY_EXTENSION_USER_ID_KEY": identifierKey})
             .then(() => (console.log("session initiated")))
     }
 
+    const clearIdentifierKey = () => {
+        browser
+            .storage
+            .sync
+            .remove("CYBER_BULLY_EXTENSION_USER_ID_KEY")
+
+        setKeyExists(false)
+    }
+
     const getIdentifierKey = async (): Promise<string | undefined> => {
         try {
-            const data = await browser.storage.local.get(
+            const data = await browser.storage.sync.get(
                 "CYBER_BULLY_EXTENSION_USER_ID_KEY"
             );
             return data["CYBER_BULLY_EXTENSION_USER_ID_KEY"];
@@ -48,16 +80,35 @@ const Popup: React.FC = () => {
         setEmail(e.target.value);
     };
 
+    const createSession = async (notificationTarget: string): Promise<string> => {
+        try {
+            let result = await axios.post(
+                'http://localhost:8080/v1/self/cyberbully/initialize',
+                {
+                    "notificationTargetValue": notificationTarget,
+                    "notificationTargetType": "EMAIL",
+                    "thresholdDurationInSeconds": 500,
+                    "thresholdCount": 5
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            return Promise.resolve(result.data["sessionId"]);
+        } catch (error) {
+            console.error('Error:', error);
+            return Promise.reject(error)
+        }
+    }
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        storeIdentifierKey(email);
-        setKeyExists(true);
-
-        // try {
-        //     axios.get('https://your-api-endpoint').then(r => r.data);
-        // } catch (error) {
-        //     console.error('Error fetching data:', error);
-        // }
+        createSession(email).then(sessionId => {
+            storeIdentifierKey(sessionId);
+            setKeyExists(true);
+            startPolling(sessionId);
+        });
     };
 
     return (
@@ -83,16 +134,18 @@ const Popup: React.FC = () => {
                     <div className="information-display">
                         <div className="information-item">
                             <label>Analyzed Tweet Count: </label>
-                            <span>10</span>
+                            <span>${analyzedTweetCount}</span>
                         </div>
                         <div className="information-item">
                             <label>Cyberbully Tweet Count:</label>
-                            <span>10</span>
+                            <span>${cyberBullyTweetCount}</span>
                         </div>
                         <div className="information-item">
                             <label>Last Alert:</label>
-                            <span>20 Minutes Ago</span>
+                            <span>${lastAlertTriggered}</span>
                         </div>
+
+                        <button onClick={clearIdentifierKey}>Clear Session</button>
                     </div>
                 )}
             </div>
