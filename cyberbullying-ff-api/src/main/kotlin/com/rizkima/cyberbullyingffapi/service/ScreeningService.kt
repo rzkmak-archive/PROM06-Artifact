@@ -45,7 +45,7 @@ class ScreeningService(
 
                 log.info("response from screening: {} raw: {}", screeningTwitterRequest.tweetValue, response.result)
 
-
+                incrementScreeningHistoryCount(sessionId = session.sessionId)
 
                 if (response.result.type == ScreeningResultType.GREEN) {
                     return
@@ -77,15 +77,10 @@ class ScreeningService(
         }
     }
 
-    fun insertScreeningHistory(sessionId: String) {
+    fun incrementScreeningHistoryCount(sessionId: String) {
         screeningHistoryRepository.findBySessionId(sessionId = sessionId).let { screeningHistory ->
-
             if (screeningHistory == null) {
-                screeningHistoryRepository.save(ScreeningHistory(
-                        sessionId = sessionId,
-                        screeningCount = 1L,
-                        screeningType = ScreeningType.TWITTER
-                ))
+                log.error("screening history is null for sessionId: {}", sessionId)
             } else {
                 screeningHistory.screeningCount++
                 screeningHistoryRepository.save(screeningHistory)
