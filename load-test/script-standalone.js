@@ -6,7 +6,7 @@ import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporte
 
 export const options = {
     // A number specifying the number of VUs to run concurrently.
-    vus: 100,
+    vus: 1000,
 
     stages: [
         {
@@ -20,6 +20,9 @@ export const options = {
         },
         {
             duration: '20s', target: 100
+        },
+        {
+            duration: '20s', target: 1000
         }
     ]
 
@@ -85,7 +88,7 @@ export default function () {
     }), headers);
 
     check(screeningResponse, {
-        'status is 200': (r) => r.status === 202
+        'status is 200': (r) => r.status === 200
     })
 }
 
