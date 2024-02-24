@@ -1,16 +1,16 @@
 ###
-POST http://127.0.0.1:8080/v1/self/cyberbully/initialize
+POST http://139.59.255.233:8081/v1/self/cyberbully/initialize
 Content-Type: application/json
 
 {"notificationTargetType":  "EMAIL", "notificationTargetValue": "r@mail.com", "thresholdCount": 5, "thresholdDurationInSeconds": 100}
 
 ###
-GET http://127.0.0.1:8080/v1/self/cyberbully/statistics
+GET http://139.59.255.233:8081/v1/self/cyberbully/statistics
 Content-Type: application/json
 X-Session-Id: 0f971bba-6fb2-494d-a2e2-5623e16d42fb
 
 ###
-POST http://127.0.0.1:8080/v1/self/cyberbully/screening/twitter
+POST http://139.59.255.233:8081/v1/self/cyberbully/screening/twitter
 Content-Type: application/json
 X-Session-Id: 5d67d076-e200-499a-8ab6-1b6b5bfe02cf
 
@@ -21,8 +21,11 @@ X-Session-Id: 5d67d076-e200-499a-8ab6-1b6b5bfe02cf
 
 
 ###
-POST http://127.0.0.1:8000/v1/screening/twitter
+POST http://188.166.185.146:8000/v1/screening/twitter
 Content-Type: application/json
 Authorization: Basic ZGVmYXVsdF9hcHBfa2V5OmRlZmF1bHRfYXBwX3NlY3JldA==
-{"value":  "this is twitter text that need to be sent"}
+
+{
+  "value": "this is twitter text that need to be sent"
+}
 
