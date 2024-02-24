@@ -6,20 +6,14 @@ import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporte
 
 export const options = {
     // A number specifying the number of VUs to run concurrently.
-    vus: 100,
+    vus: 1000,
 
     stages: [
         {
-            duration: '5s', target: 10
+            duration: '10s', target: 100
         },
         {
-            duration: '20s', target: 30
-        },
-        {
-            duration: '20s', target: 50
-        },
-        {
-            duration: '20s', target: 100
+            duration: '10s', target: 1000
         }
     ]
 
