@@ -1,7 +1,6 @@
 import http from 'k6/http';
 import { check } from 'k6';
 import { randomString, randomIntBetween } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js';
-import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 
 
 export const options = {
@@ -10,19 +9,10 @@ export const options = {
 
     stages: [
         {
-            duration: '5s', target: 10
+            duration: '10s', target: 100
         },
         {
-            duration: '20s', target: 30
-        },
-        {
-            duration: '20s', target: 50
-        },
-        {
-            duration: '20s', target: 100
-        },
-        {
-            duration: '20s', target: 1000
+            duration: '10s', target: 1000
         }
     ]
 
@@ -90,10 +80,4 @@ export default function () {
     check(screeningResponse, {
         'status is 200': (r) => r.status === 200
     })
-}
-
-export function handleSummary(data) {
-    return {
-        "summary.html": htmlReport(data),
-    };
 }
