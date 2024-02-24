@@ -1,6 +1,7 @@
 import http from 'k6/http';
 import { check } from 'k6';
 import { randomString, randomIntBetween } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js';
+import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 
 
 export const options = {
@@ -80,4 +81,10 @@ export default function () {
     check(screeningResponse, {
         'status is 200': (r) => r.status === 200
     })
+}
+
+export function handleSummary(data) {
+    return {
+        "summary.html": htmlReport(data),
+    };
 }
