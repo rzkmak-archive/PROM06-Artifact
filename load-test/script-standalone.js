@@ -73,39 +73,19 @@ export const options = {
 //
 
 export default function () {
-    const dummyMail= `${randomString(10)}@example.com`;
     const headers = {
         headers: {
             'Content-Type': 'application/json',
         }
     };
-
-    const initResponse = http.post('http://139.59.255.233:8081/v1/self/cyberbully/initialize', JSON.stringify({
-        notificationTargetType: 'EMAIL',
-        notificationTargetValue: dummyMail,
-        thresholdCount: 5,
-        thresholdDurationInSeconds: 100
-    }), headers);
-
-    check(initResponse, {
-        'status is 200': (r) => r.status === 200
-    });
-
-    const sessionId = initResponse.json('sessionId');
-    const headersWithSessionId = {
-        headers: {
-            'X-Session-Id': sessionId,
-            'Content-Type': 'application/json'
-        }
-    }
     const randomWord = `${randomString(randomIntBetween(10,100))} ${randomString(randomIntBetween(10,100))} ${randomString(randomIntBetween(10,100))}`
 
-    const screeningResponse = http.post('http://139.59.255.233:8081/v1/self/cyberbully/screening/twitter', JSON.stringify({
-        tweetValue: randomWord
-    }), headersWithSessionId);
+    const screeningResponse = http.post('http://188.166.185.146:8000/v1/screening/twitter', JSON.stringify({
+        value: randomWord
+    }), headers);
 
     check(screeningResponse, {
-        'status is 202': (r) => r.status === 202
+        'status is 200': (r) => r.status === 202
     })
 }
 
