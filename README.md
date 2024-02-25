@@ -46,11 +46,15 @@ This repository is artifact archive for PROM06 Submission.
 
 
 ## Design Docs
-1. [API Spec](/docs/api_spec)
-2. [Data Model](/docs/data_model)
-   ![Data Model](/docs/data_model/db_design.png)
-3. [Sequence](/docs/sequence)
-   ![Sequence](/docs/sequence/screen_cyberbully_twitter.png)
+### [API Spec](/docs/api_spec)
+Refer to `/docs/api_spec`
+
+### [Data Model](/docs/data_model)
+
+![Data Model](/docs/data_model/db_design.png)
+### [Sequence](/docs/sequence)
+
+![Sequence](/docs/sequence/screen_cyberbully_twitter.png)
 
 ## Other
 - Performance Test (see `load-test` directory)
